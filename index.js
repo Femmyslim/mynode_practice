@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
 const {uuid} = require('uuidv4')
-const { METHODS } = require('http')
+const joi = require('joi')
 const { connect } = require('http2')
 const app = express()
 const port = process.env.APP_PORT
@@ -86,6 +86,23 @@ try{
 }
 
 
+// applying joi module package to validate input for post method
+ app.post("/create", (req, res) =>{
+    const profile = joi.object ({
+        firstname: joi.string().min(4).max(30),
+        othernames: joi.string().min(4).max(30),
+        email: joi.string().email({minDomainSegmets: 2, tlds: {allow: ['com', 'net']}}),
+        phone: joi.string().min(11).max(14)
+
+    }),
+
+    const {error, value} = schema.validate(req.body);
+
+    if(error != 'undefined'){
+        throw new error('All field are required')
+    }
+    const { firstname, othername, email, phone } = req.body
+ })
 
 
 
